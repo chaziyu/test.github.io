@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Attendance</h1>
+    <form id="attendanceForm">
+        <label for="name">Student Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="status">Attendance Status:</label>
+        <select id="status" name="status">
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+        </select>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Attendance Records</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="attendanceTableBody">
+            <!-- Records will be added here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        // Initialize Supabase Client
+        const supabaseUrl = 'https://mpmfpypoljzwqbszdnww.supabase.co'; // Replace with your Supabase URL
+        const supabaseKey = '<your-supabase-api-key>'; // Replace with your Supabase API key
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        document.getElementById('attendanceForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent form from refreshing the page
+
+            const name = document.getElementById('name').value;
+            const status = document.getElementById('status').value;
+
+            // Insert attendance data into Supabase
+            try {
+                const { data, error } = await supabase
+                    .from('attendance')
+                    .insert([{ name, status }]);
+
+                if (error) {
+                    console.error('Error inserting data:', error);
+                    alert('Error saving record');
+                } else {
+                    // Get the table body
+                    const tableBody = document.getElementById('attendanceTableBody');
+
+                    // Create a new row
+                    const newRow = document.createElement('tr');
+
+                    // Create cells for name and status
+                    const nameCell = document.createElement('td');
+                    const statusCell = document.createElement('td');
+
+                    // Fill cells with data
+                    nameCell.textContent = name;
+                    statusCell.textContent = status;
+
+                    // Add cells to the row
+                    newRow.appendChild(nameCell);
+                    newRow.appendChild(statusCell);
+
+                    // Add row to the table
+                    tableBody.appendChild(newRow);
+
+                    // Clear the form
+                    document.getElementById('attendanceForm').reset();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        // Fetch existing records from Supabase
+        async function fetchRecords() {
+            try {
+                const { data, error } = await supabase
+                    .from('attendance')
+                    .select('*');
+
+                if (error) {
+                    console.error('Error fetching data:', error);
+                    alert('Error fetching records');
+                } else {
+                    const tableBody = document.getElementById('attendanceTableBody');
+                    data.forEach(record => {
+                        const row = document.createElement('tr');
+                        const nameCell = document.createElement('td');
+                        const statusCell = document.createElement('td');
+
+                        nameCell.textContent = record.name;
+                        statusCell.textContent = record.status;
+
+                        row.appendChild(nameCell);
+                        row.appendChild(statusCell);
+                        tableBody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching records:', error);
+            }
+        }
+
+        // Call the function when the page loads
+        fetchRecords();
+    </script>
+</body>
+</html>
