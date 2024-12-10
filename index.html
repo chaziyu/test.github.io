@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Attendance</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.js"></script> <!-- Supabase Client CDN -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,9 +61,9 @@
     </table>
 
     <script>
-        // Initialize Supabase Client
+        // Initialize Supabase Client (Use your own Supabase URL and anon key here)
         const supabaseUrl = 'https://mpmfpypoljzwqbszdnww.supabase.co'; // Replace with your Supabase URL
-        const supabaseKey = '<your-supabase-api-key>'; // Replace with your Supabase API key
+        const supabaseKey = 'process.env.SUPABASE_KEY'; // Replace with your Supabase anon key
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         document.getElementById('attendanceForm').addEventListener('submit', async function(event) {
