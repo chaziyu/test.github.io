@@ -63,7 +63,7 @@
     <script>
         // Initialize Supabase Client
         const supabaseUrl = 'https://mpmfpypoljzwqbszdnww.supabase.co';
-        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your actual Supabase key
+        const supabaseKey = 'process.env.SUPABASE_KEY'; // Replace with your actual Supabase key
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         // Submit the form and insert data into Supabase
