@@ -60,11 +60,38 @@
         </tbody>
     </table>
 
-    <script>
-        // Initialize Supabase Client (Use your own Supabase URL and anon key here)
-        const supabaseUrl = 'https://mpmfpypoljzwqbszdnww.supabase.co'; // Replace with your Supabase URL
-        const supabaseKey = 'process.env.SUPABASE_KEY'; // Replace with your Supabase anon key
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.js"></script>
+
+<script>
+// Initialize Supabase Client (Ensure this is at the very top)
+const supabaseUrl = 'https://mpmfpypoljzwqbszdnww.supabase.co';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+// Now you can use supabase in your code below
+document.getElementById('attendanceForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('name').value;
+    const status = document.getElementById('status').value;
+
+    // Insert data using Supabase
+    try {
+        const { data, error } = await supabase
+            .from('attendance')
+            .insert([{ name, status }]);
+
+        if (error) {
+            console.error('Error inserting data:', error);
+        } else {
+            console.log('Data saved successfully:', data);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+</script>
+
 
         document.getElementById('attendanceForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent form from refreshing the page
